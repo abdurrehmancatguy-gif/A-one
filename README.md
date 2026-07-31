@@ -59,20 +59,57 @@ highlights the section you are looking at via a scroll-spy in `main.js`.
 ## Brand
 
 The logo was rebuilt as vector paths from the supplied artwork, so it stays sharp at
-any size and can be recoloured in CSS. The site runs a **dark theme** built up from
-the navy in the logo:
+any size and can be recoloured in CSS. The site runs a **dark base with warm sand
+bands** — three surfaces, all derived from the navy and gold in the logo.
+
+**Dark (default)**
 
 | Token | Value | Use |
 |---|---|---|
 | `--bg` | `#0d1622` | Page background |
-| `--bg-alt` | `#111d2c` | Alternating sections |
+| `--bg-alt` | `#111d2c` | Principles, FAQ |
 | `--bg-deep` | `#09111b` | Marquee, services band, footer |
 | `--surface` | `#162232` | Cards, tiles, raised panels |
-| `--gold` | `#dfb96b` | Logo triangle, accents, primary button |
-| `--ink` | `#eef2f7` | Headings and emphasis |
+| `--gold` / `--gold-ink` | `#dfb96b` | Accents and gold text |
+| `--ink` | `#eef2f7` | Headings |
 | `--body` | `#9dabbd` | Body copy |
-| `--muted` | `#8c99ab` | Secondary text (tuned to clear 4.5:1 on `--surface`) |
-| `--navy` | `#1a2a40` | Brand reference; text colour on gold buttons |
+| `--muted` | `#8c99ab` | Secondary text |
+
+**Sand band — `.section--light`** (about, products, process)
+
+| Token | Value | Use |
+|---|---|---|
+| `--bg` | `#f2ece0` | Warm parchment, deliberately not white |
+| `--surface` | `#fbf8f2` | Cards on sand |
+| `--ink` | `#121d2b` | Headings |
+| `--body` | `#4f5c6d` | Body copy |
+| `--gold` | `#c08f2c` | Rules, bullets, icon fills |
+| `--gold-ink` | `#77591a` | Gold *text* — the pale brand gold fails contrast on sand |
+
+### How the two surfaces work
+
+`.section--light` re-points the same tokens the components already draw from, so
+cards, borders, rules and type invert automatically — there are no per-component
+light-mode overrides to keep in sync. To flip any section, add or remove the class:
+
+```html
+<section class="section section--light" id="products">
+```
+
+Two deliberate exceptions:
+
+- **`--gold` vs `--gold-ink`.** Gold splits into a graphic colour and a text
+  colour. They are identical on dark; on sand the text variant darkens to a bronze
+  that clears 4.5:1. Use `--gold-ink` for anything rendered as type.
+- **`.panel`** re-asserts the dark tokens, because the brand visual stays dark
+  whichever band it sits in.
+
+Each sand band also carries the A-One mark as an oversized watermark cropped off the
+right edge (`.section--light::after`, 4% opacity) — brand presence without needing
+photography.
+
+Every text/background pair was measured against WCAG AA in both surfaces, including
+worst-case stops on gradient backgrounds. There are currently no failures.
 
 The logo mark ships navy in the SVG files so it stays correct on white stationery;
 CSS recolours the stroke to `--ink` on screen, and the print stylesheet puts it back
