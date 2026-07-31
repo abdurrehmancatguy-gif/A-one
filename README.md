@@ -51,21 +51,33 @@ A-one/
 Page sections, in order: hero → capability marquee → `#about` → principles →
 `#products` → `#services` → `#process` → FAQ → `#contact` → footer.
 
-Every link on the page is an in-page anchor. Nothing navigates away.
+Every link on the page is an in-page anchor. Nothing navigates away. The nav
+highlights the section you are looking at via a scroll-spy in `main.js`.
 
 ---
 
 ## Brand
 
 The logo was rebuilt as vector paths from the supplied artwork, so it stays sharp at
-any size and can be recoloured in CSS. Colours were sampled from it:
+any size and can be recoloured in CSS. The site runs a **dark theme** built up from
+the navy in the logo:
 
 | Token | Value | Use |
 |---|---|---|
-| `--navy` | `#1a2a40` | Logo stroke, headings, dark sections |
+| `--bg` | `#0d1622` | Page background |
+| `--bg-alt` | `#111d2c` | Alternating sections |
+| `--bg-deep` | `#09111b` | Marquee, services band, footer |
+| `--surface` | `#162232` | Cards, tiles, raised panels |
 | `--gold` | `#dfb96b` | Logo triangle, accents, primary button |
-| `--gold-deep` | `#c39a45` | Small gold text that needs more contrast |
-| `--navy-deep` | `#101b29` | Footer |
+| `--ink` | `#eef2f7` | Headings and emphasis |
+| `--body` | `#9dabbd` | Body copy |
+| `--muted` | `#8c99ab` | Secondary text (tuned to clear 4.5:1 on `--surface`) |
+| `--navy` | `#1a2a40` | Brand reference; text colour on gold buttons |
+
+The logo mark ships navy in the SVG files so it stays correct on white stationery;
+CSS recolours the stroke to `--ink` on screen, and the print stylesheet puts it back
+to navy. Every text/background pair on the page was measured against WCAG AA —
+there are currently no failures.
 
 Type is **Jost** for display (a close match to the logo's geometric wordmark) and
 **Inter** for body text, both loaded from Google Fonts. If you would rather not
