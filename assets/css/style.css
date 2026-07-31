@@ -24,7 +24,7 @@
 :root {
   /* Brand — sampled from the A-One logo.
      --gold draws graphics (rules, bullets, fills); --gold-ink is the text-safe
-     variant. They are the same on dark and diverge on the sand bands, where a
+     variant. They are the same on dark and diverge on the tan bands, where a
      pale gold would not carry enough contrast for small type. */
   --navy:        #1a2a40;
   --gold:        #dfb96b;
@@ -225,8 +225,8 @@ strong { color: var(--ink); font-weight: 600; }
 }
 
 /* --------------------------------------------------------------------------
-   Sand band — the site's second identity surface.
-   A warm parchment rather than white, so it reads as part of the navy/gold
+   Tan band — the site's second identity surface.
+   A warm mid-tan, not an off-white, so it reads as part of the navy/gold
    palette instead of a plain inversion. Every token the components draw from
    is re-pointed here, so cards, rules, borders and type invert on their own
    with no per-component overrides.
@@ -715,44 +715,6 @@ strong { color: var(--ink); font-weight: 600; }
 /* ==========================================================================
    8. Sections & components
    ========================================================================== */
-
-/* --- Marquee --- */
-.marquee {
-  padding-block: 1.5rem;
-  border-block: 1px solid var(--line);
-  background: var(--bg-deep);
-  overflow: hidden;
-}
-.marquee__track {
-  display: flex;
-  width: max-content;
-  gap: 3.5rem;
-  animation: marquee 38s linear infinite;
-}
-.marquee:hover .marquee__track { animation-play-state: paused; }
-.marquee__item {
-  display: flex;
-  align-items: center;
-  gap: 3.5rem;
-  font-family: var(--font-display);
-  font-size: 0.78rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--muted);
-  white-space: nowrap;
-}
-.marquee__item::after {
-  content: "";
-  width: 4px;
-  height: 4px;
-  background: var(--gold);
-  transform: rotate(45deg);
-  flex-shrink: 0;
-}
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
 
 /* --- Card --- */
 .card {
@@ -1472,11 +1434,10 @@ body.consent-open .to-top { opacity: 0; visibility: hidden; }
     transform: none !important;
   }
   .rule { transform: scaleX(1) !important; }
-  .marquee__track { animation: none; }
 }
 
 @media print {
-  .header, .mobile-nav, .to-top, .hero__cue, .marquee, .consent { display: none !important; }
+  .header, .mobile-nav, .to-top, .hero__cue, .consent { display: none !important; }
   html, body { background: #fff !important; }
   body { opacity: 1 !important; color: #000; }
   h1, h2, h3, h4, .hero__title, strong { color: #000 !important; }

@@ -47,8 +47,8 @@ A-one/
 └── .claude/launch.json     Local dev-server config
 ```
 
-Page sections, in order: hero → capability marquee → `#about` → principles →
-`#products` → `#services` → `#process` → FAQ → `#contact` → footer.
+Page sections, in order: hero → `#about` → principles → `#products` →
+`#services` → `#process` → FAQ → `#contact` → footer.
 
 Every link on the page is an in-page anchor. Nothing navigates away. The nav
 highlights the section you are looking at via a scroll-spy in `main.js`.
