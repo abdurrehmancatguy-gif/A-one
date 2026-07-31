@@ -7,13 +7,12 @@ CSS and vanilla JavaScript — no build step, no dependencies, no framework.
 
 ## Before this goes live
 
-The site deliberately contains **no company statistics, no address, no phone number
-and no email address**, because those details were not available when it was built.
-Two things need your input:
+The site deliberately contains **no company statistics, no address and no phone
+number**, because those details were not available when it was built.
 
 | What | Where | Status |
 |---|---|---|
-| Enquiry email address | `index.html`, `data-mailto-form="REPLACE-WITH-YOUR-EMAIL"` | **Required** — the form cannot deliver until this is set |
+| Enquiry email address | `index.html`, `data-mailto-form="info@aonefzco.com"` | **Set** — enquiries are addressed to `info@aonefzco.com` |
 | Trade licence details, address, phone | not present anywhere | Add once the licence is issued |
 
 **All body copy is a first draft.** It describes how a trading company of this kind
@@ -59,7 +58,7 @@ highlights the section you are looking at via a scroll-spy in `main.js`.
 ## Brand
 
 The logo was rebuilt as vector paths from the supplied artwork, so it stays sharp at
-any size and can be recoloured in CSS. The site runs a **dark base with warm sand
+any size and can be recoloured in CSS. The site runs a **dark base with warm tan
 bands** — three surfaces, all derived from the navy and gold in the logo.
 
 **Dark (default)**
@@ -75,16 +74,16 @@ bands** — three surfaces, all derived from the navy and gold in the logo.
 | `--body` | `#9dabbd` | Body copy |
 | `--muted` | `#8c99ab` | Secondary text |
 
-**Sand band — `.section--light`** (about, products, process)
+**Tan band — `.section--light`** (about, products, process)
 
 | Token | Value | Use |
 |---|---|---|
-| `--bg` | `#f2ece0` | Warm parchment, deliberately not white |
-| `--surface` | `#fbf8f2` | Cards on sand |
-| `--ink` | `#121d2b` | Headings |
-| `--body` | `#4f5c6d` | Body copy |
-| `--gold` | `#c08f2c` | Rules, bullets, icon fills |
-| `--gold-ink` | `#77591a` | Gold *text* — the pale brand gold fails contrast on sand |
+| `--bg` | `#d8c6a0` | Warm mid-tan — a real colour, not an off-white |
+| `--surface` | `#e3d5b8` | Cards on tan |
+| `--ink` | `#16212f` | Headings (9.7:1 on the band) |
+| `--body` | `#3b4657` | Body copy |
+| `--gold` | `#a8761a` | Rules, bullets, icon fills |
+| `--gold-ink` | `#5a4110` | Gold *text* — the pale brand gold fails contrast on tan |
 
 ### How the two surfaces work
 
@@ -99,13 +98,13 @@ light-mode overrides to keep in sync. To flip any section, add or remove the cla
 Two deliberate exceptions:
 
 - **`--gold` vs `--gold-ink`.** Gold splits into a graphic colour and a text
-  colour. They are identical on dark; on sand the text variant darkens to a bronze
+  colour. They are identical on dark; on tan the text variant darkens to a bronze
   that clears 4.5:1. Use `--gold-ink` for anything rendered as type.
 - **`.panel`** re-asserts the dark tokens, because the brand visual stays dark
   whichever band it sits in.
 
-Each sand band also carries the A-One mark as an oversized watermark cropped off the
-right edge (`.section--light::after`, 4% opacity) — brand presence without needing
+Each tan band also carries the A-One mark as an oversized watermark cropped off the
+right edge (`.section--light::after`, 5.5% opacity) — brand presence without needing
 photography.
 
 Every text/background pair was measured against WCAG AA in both surfaces, including
@@ -130,10 +129,10 @@ Because the site is static, the form hands a completed, validated enquiry to the
 visitor's own email client via a `mailto:` link. It never claims to have sent or
 stored anything it hasn't.
 
-**To use it as-is:** set the address in `index.html`:
+Enquiries are addressed to **`info@aonefzco.com`**, set in `index.html`:
 
 ```html
-<form class="form" data-mailto-form="enquiries@yourdomain.com" novalidate>
+<form class="form" data-mailto-form="info@aonefzco.com" novalidate>
 ```
 
 **To receive submissions on a server instead** (recommended once you have a domain
