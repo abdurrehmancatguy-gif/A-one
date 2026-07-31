@@ -14,15 +14,67 @@
 <meta property="og:description" content="Sourcing, inspection, consolidation and export handled end to end.">
 <meta property="og:image" content="assets/img/logo.svg">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
-<script>document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/, "js");</script>
+
+<script>
+/* Web fonts are a third-party request: asking Google for them discloses the
+   visitor's IP address. So they are not requested until consent is given.
+   The loader lives here rather than in main.js so a returning visitor who has
+   already accepted gets their fonts on first paint, without waiting for the
+   deferred script. Declining leaves the local fallback stack in place. */
+(function () {
+  var d = document;
+  d.documentElement.className = d.documentElement.className.replace(/\bno-js\b/, "js");
+
+  window.__aoneLoadFonts = function () {
+    if (d.getElementById("gfonts")) return;
+    [["https://fonts.googleapis.com", false],
+     ["https://fonts.gstatic.com", true]].forEach(function (p) {
+      var pre = d.createElement("link");
+      pre.rel = "preconnect";
+      pre.href = p[0];
+      if (p[1]) pre.crossOrigin = "anonymous";
+      d.head.appendChild(pre);
+    });
+    var css = d.createElement("link");
+    css.id = "gfonts";
+    css.rel = "stylesheet";
+    css.href = "https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap";
+    d.head.appendChild(css);
+  };
+
+  try {
+    if (localStorage.getItem("aone-consent") === "granted") window.__aoneLoadFonts();
+  } catch (e) {}
+})();
+</script>
 </head>
 <body>
 
 <a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ===================== Consent =====================
+     Sits high in the DOM so keyboard and screen-reader users reach it before
+     the page content; CSS pins it to the bottom of the viewport. -->
+<section class="consent" data-consent-banner role="dialog" aria-modal="false"
+         aria-labelledby="consent-title" aria-describedby="consent-text" hidden>
+  <div class="container consent__inner">
+    <div>
+      <h2 class="consent__title" id="consent-title">Cookies &amp; privacy</h2>
+      <p class="consent__text" id="consent-text">
+        This site sets no tracking, analytics or advertising cookies. It saves one
+        entry on your device purely to remember the choice you make here.
+        With your consent it also loads typefaces from Google Fonts, which
+        discloses your IP address to Google. Decline and the site uses the fonts
+        already installed on your device — everything else works exactly the same.
+      </p>
+    </div>
+    <div class="consent__actions">
+      <button class="btn btn--gold" type="button" data-consent="granted">Accept</button>
+      <button class="btn btn--ghost" type="button" data-consent="denied">Decline</button>
+    </div>
+  </div>
+</section>
 
 <!-- ===================== Header ===================== -->
 <header class="header header--overlay">
@@ -670,7 +722,11 @@
 
     <div class="footer__bottom">
       <p>&copy; <span data-year>2026</span> A-One International General Trading. All rights reserved.</p>
-      <p><a href="#top">Back to top</a></p>
+      <p>
+        <a href="#top">Back to top</a>
+        <span aria-hidden="true"> · </span>
+        <button class="consent-reopen" type="button" data-consent-reopen>Cookie settings</button>
+      </p>
     </div>
   </div>
 </footer>

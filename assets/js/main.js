@@ -329,6 +329,71 @@
   }
 
   /* ----------------------------------------------------------------------
+     Consent
+     The site sets no tracking, analytics or advertising cookies. The only
+     thing that actually discloses anything about a visitor is the web-font
+     request, which hands their IP address to Google — so that is what this
+     gates. Accept and Decline carry equal weight; declining is a real
+     outcome, not a delay. One localStorage entry remembers the answer.
+     ---------------------------------------------------------------------- */
+  function initConsent() {
+    var KEY = "aone-consent";
+    var banner = document.querySelector("[data-consent-banner]");
+    if (!banner) return;
+
+    // Falls back to memory when storage is blocked (private browsing).
+    var sessionChoice = null;
+
+    function read() {
+      try { return localStorage.getItem(KEY); } catch (e) { return sessionChoice; }
+    }
+    function write(value) {
+      sessionChoice = value;
+      try { localStorage.setItem(KEY, value); } catch (e) {}
+    }
+
+    function open() {
+      banner.hidden = false;
+      // Force layout so the slide-up has a start value to animate from.
+      // Deliberately not requestAnimationFrame: that is throttled in
+      // background tabs, which would leave the banner parked off-screen.
+      void banner.offsetHeight;
+      banner.classList.add("is-open");
+      document.body.classList.add("consent-open");
+    }
+
+    function close() {
+      banner.classList.remove("is-open");
+      document.body.classList.remove("consent-open");
+      window.setTimeout(function () { banner.hidden = true; }, reduceMotion ? 0 : 650);
+    }
+
+    banner.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-consent]");
+      if (!btn) return;
+      var choice = btn.getAttribute("data-consent");
+      write(choice);
+      if (choice === "granted" && typeof window.__aoneLoadFonts === "function") {
+        window.__aoneLoadFonts();
+      }
+      close();
+    });
+
+    document.querySelectorAll("[data-consent-reopen]").forEach(function (el) {
+      el.addEventListener("click", function () {
+        open();
+        var first = banner.querySelector("[data-consent]");
+        if (first) first.focus({ preventScroll: true });
+      });
+    });
+
+    // Lets any future analytics ask before it loads.
+    window.__aoneConsent = read;
+
+    if (!read()) window.setTimeout(open, 700);
+  }
+
+  /* ----------------------------------------------------------------------
      Footer year
      ---------------------------------------------------------------------- */
   function initYear() {
@@ -343,7 +408,7 @@
   function boot() {
     [
       initReveal, initScrollChrome, initMobileNav, initScrollSpy,
-      initAccordion, initParallax, initForm, initYear
+      initAccordion, initParallax, initForm, initConsent, initYear
     ].forEach(function (fn) {
       try { fn(); } catch (err) {
         if (window.console) console.error("[a-one] " + fn.name + " failed:", err);

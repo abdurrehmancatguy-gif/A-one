@@ -150,6 +150,50 @@ browser then submits normally. Client-side validation styling stays in place.
 
 ---
 
+## Cookies & consent
+
+A consent banner appears on first visit. It is not decorative — it gates a real
+third-party request.
+
+**What the site actually stores and sends:**
+
+| | |
+|---|---|
+| Tracking / analytics / advertising cookies | **None.** There is no analytics on this site. |
+| `localStorage["aone-consent"]` | One entry, `granted` or `denied`, to remember the answer. Written only after the visitor chooses. |
+| Google Fonts (`fonts.googleapis.com`, `fonts.gstatic.com`) | Requested **only after Accept**. This is the one thing that discloses the visitor's IP address to a third party, which is why consent gates it. |
+
+Decline and the page renders in the local fallback stack (Futura / Century Gothic /
+Avenir / system sans). Verified: a declined visitor loads only `style.css` and
+`main.js` — **zero external requests**.
+
+Accept and Decline are equally weighted and equally prominent; there is no
+pre-ticked option and no "reject" buried behind a second screen. Visitors can
+change their mind at any time via **Cookie settings** in the footer.
+
+### If you add analytics later
+
+Do not load the script unconditionally. Check consent first:
+
+```js
+if (window.__aoneConsent && window.__aoneConsent() === "granted") {
+  // inject your analytics tag here
+}
+```
+
+Then add the tool by name to the banner copy in `index.html`, so the disclosure
+stays accurate.
+
+### The simpler alternative
+
+If you would rather not ask visitors anything, self-host the two fonts instead of
+loading them from Google. That removes the only third-party request, at which point
+the banner has nothing left to gate and can be deleted outright. That is the
+cleanest outcome — the banner exists because the fonts are remote, not the reverse.
+
+> This describes what the site does technically. It is not legal advice; if you
+> need a compliance position for a specific market, have it reviewed.
+
 ## Animation
 
 Motion is deliberately restrained: fade-and-rise on scroll, a header that shrinks
