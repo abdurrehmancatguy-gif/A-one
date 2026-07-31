@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 560" role="img" aria-label="A-One International General Trading">
+  <title>A-One International General Trading</title>
+  <g transform="translate(234 40)">
+    <path d="M143 0 L182 55 L85 273 L0 273 Z" fill="#1A2A40"/>
+    <path d="M225 140 L292 273 L158 273 Z" fill="#DFB96B"/>
+  </g>
+  <text x="380" y="440"
+        text-anchor="middle"
+        font-family="Jost, Futura, 'Century Gothic', 'Avenir Next', Avenir, sans-serif"
+        font-size="104" font-weight="400" letter-spacing="26" fill="#1A2A40">A-ONE</text>
+  <text x="380" y="508"
+        text-anchor="middle"
+        font-family="Jost, Futura, 'Century Gothic', 'Avenir Next', Avenir, sans-serif"
+        font-size="30" font-weight="400" letter-spacing="7.5" fill="#1A2A40">INTERNATIONAL GENERAL TRADING</text>
+</svg>
