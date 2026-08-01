@@ -72,6 +72,7 @@
     <div class="consent__actions">
       <button class="btn btn--gold" type="button" data-consent="granted">Accept</button>
       <button class="btn btn--ghost" type="button" data-consent="denied">Decline</button>
+      <button class="link-btn consent__more" type="button" data-modal-open="modal-cookies">Cookie Policy</button>
     </div>
   </div>
 </section>
@@ -691,11 +692,12 @@
 
     <div class="footer__bottom">
       <p>&copy; <span data-year>2026</span> A-One International General Trading. All rights reserved.</p>
-      <p>
-        <a href="#top">Back to top</a>
-        <span aria-hidden="true"> · </span>
-        <button class="consent-reopen" type="button" data-consent-reopen>Cookie settings</button>
-      </p>
+      <ul class="footer__legal">
+        <li><button class="link-btn" type="button" data-modal-open="modal-terms">Terms &amp; Conditions</button></li>
+        <li><button class="link-btn" type="button" data-modal-open="modal-privacy">Privacy Policy</button></li>
+        <li><button class="link-btn" type="button" data-modal-open="modal-cookies">Cookie Policy</button></li>
+        <li><a href="#top">Back to top</a></li>
+      </ul>
     </div>
   </div>
 </footer>
@@ -703,6 +705,254 @@
 <button class="to-top" type="button" aria-label="Back to top">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
+
+<!-- ===================== Policy dialogs =====================
+     Text transcribed from AONE_Website_Legal_Policies_Completed.pdf.
+     The compliance checklist in that PDF is marked INTERNAL USE and is
+     deliberately not published here. -->
+
+<!-- ---------- Terms & Conditions ---------- -->
+<div class="modal" id="modal-terms" role="dialog" aria-modal="true"
+     aria-labelledby="modal-terms-title" hidden>
+  <div class="modal__backdrop" data-modal-close></div>
+  <div class="modal__panel">
+    <div class="modal__head">
+      <p class="modal__eyebrow">AONE International General Trade</p>
+      <h2 id="modal-terms-title">Terms and Conditions of Use</h2>
+      <button class="modal__close" type="button" data-modal-close aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="modal__body" tabindex="0">
+      <h3>1. Introduction</h3>
+      <p>
+        Welcome to the AONE International General Trade website ("Website"). This Website is
+        owned and operated by the AONE International General Trade ("Company", "We", "Us", or
+        "Our"), a company registered in Meydan Free Zone, Dubai, United Arab Emirates.
+      </p>
+      <p>
+        These Terms and Conditions ("Terms") govern your use of our Website and the services we
+        offer. By accessing or using our Website, you agree to be bound by these Terms and our
+        Privacy Policy. If you do not agree, please do not use our services.
+      </p>
+
+      <h3>2. Eligibility and Account Registration</h3>
+      <ul>
+        <li><strong>Age:</strong> By using this Website, you represent that you are at least 18 years old and capable of entering a legally binding contract.</li>
+        <li><strong>Business Representation:</strong> If you are using the Website on behalf of a business, you warrant that you are authorized to bind that entity to these Terms.</li>
+        <li><strong>Accuracy:</strong> You agree to provide accurate, current, and complete information during registration and to update it promptly if it changes. You are responsible for maintaining the confidentiality of your account credentials.</li>
+      </ul>
+
+      <h3>3. Services and Modifications</h3>
+      <p>
+        AONE International General Trade is a professional engaged in international food and
+        general trade import and export, with offices in Hong Kong and Dubai Sharjah. We offer a
+        wide range of commodity information networks and trading solutions.
+      </p>
+      <p>
+        We reserve the right to modify, suspend, or discontinue any part of our services or the
+        Website at any time without prior notice. We may also revise these Terms from time to
+        time. We will notify you of material changes. Your continued use constitutes acceptance
+        of the updated Terms.
+      </p>
+
+      <h3>4. Intellectual Property</h3>
+      <p>
+        All content on this Website, including text, graphics, logos, and images, is the property
+        of AONE International General Trade or its content suppliers and is protected by UAE and
+        international copyright laws. You may not reproduce, distribute, or create derivative
+        works without our express written consent.
+      </p>
+
+      <h3>5. User Conduct</h3>
+      <p>
+        You agree not to use the Website for any unlawful purpose or in any way that could damage
+        the Company. This includes:
+      </p>
+      <ul>
+        <li>Violating any applicable local, national, or international law or regulation (e.g., UAE Cybercrime Law).</li>
+        <li>Impersonating any person or entity.</li>
+        <li>Interfering with or disrupting the Website's functionality.</li>
+        <li>Engaging in fraudulent activities.</li>
+      </ul>
+
+      <h3>6. Limitation of Liability</h3>
+      <p>
+        To the maximum extent permitted by UAE law, AONE International General Trade shall not be
+        liable for any indirect, incidental, special, or consequential damages arising out of your
+        use of the Website or services. The Website is provided on an "AS IS" and "AS AVAILABLE"
+        basis.
+      </p>
+
+      <h3>7. Indemnification</h3>
+      <p>
+        You agree to indemnify and hold AONE International General Trade harmless from any claims,
+        damages, or expenses arising from your breach of these Terms or your violation of any law
+        or third-party rights.
+      </p>
+
+      <h3>8. Dispute Resolution and Governing Law</h3>
+      <p>
+        These Terms are governed by the laws of the United Arab Emirates. Any disputes arising out
+        of these Terms shall be subject to the exclusive jurisdiction of the courts of Dubai, UAE.
+      </p>
+
+      <h3>9. Contact Us</h3>
+      <p>
+        If you have any questions about these Terms, please contact us at:
+        <a href="mailto:info@aonefzco.com">info@aonefzco.com</a>.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ---------- Privacy Policy ---------- -->
+<div class="modal" id="modal-privacy" role="dialog" aria-modal="true"
+     aria-labelledby="modal-privacy-title" hidden>
+  <div class="modal__backdrop" data-modal-close></div>
+  <div class="modal__panel">
+    <div class="modal__head">
+      <p class="modal__eyebrow">AONE International General Trade</p>
+      <h2 id="modal-privacy-title">Privacy Policy</h2>
+      <button class="modal__close" type="button" data-modal-close aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="modal__body" tabindex="0">
+      <h3>1. Introduction</h3>
+      <p>
+        AONE International General Trade ("we", "us", "our") respects your privacy. This Privacy
+        Policy explains how we collect, use, disclose, and safeguard your personal data when you
+        visit our Website or use our services.
+      </p>
+      <p>
+        We are committed to complying with Federal Decree-Law No. 45 of 2021 on the Protection of
+        Personal Data ("PDPL") and other applicable privacy laws in the UAE.
+      </p>
+
+      <h3>2. Information We Collect</h3>
+      <ul>
+        <li><strong>Personal Identification Information:</strong> Name, email address, phone number, company name, and job title.</li>
+        <li><strong>Technical Data:</strong> IP address, browser type, device information, and cookies.</li>
+        <li><strong>Transaction Data:</strong> Details about the products or services you inquire about or purchase.</li>
+      </ul>
+
+      <h3>3. How We Use Your Information</h3>
+      <p>We process your data for the following lawful purposes:</p>
+      <ul>
+        <li>To provide, maintain, and improve our services.</li>
+        <li>To process transactions and send related communications.</li>
+        <li>To send you promotional materials (only with your consent, which you may withdraw).</li>
+        <li>To comply with legal and regulatory obligations (e.g., anti-money laundering checks).</li>
+      </ul>
+
+      <h3>4. Legal Basis for Processing (under PDPL)</h3>
+      <p>We process your personal data based on:</p>
+      <ul>
+        <li><strong>Consent:</strong> Where you have given explicit consent for specific purposes.</li>
+        <li><strong>Contractual Necessity:</strong> To fulfill our contractual obligations to you.</li>
+        <li><strong>Legal Obligation:</strong> To comply with UAE laws.</li>
+        <li><strong>Legitimate Interest:</strong> For our legitimate business interests, provided such interests do not override your privacy rights.</li>
+      </ul>
+
+      <h3>5. Data Subject Rights (Your Rights)</h3>
+      <p>Under the PDPL, you have specific rights regarding your personal data:</p>
+      <ol>
+        <li><strong>Right to Access:</strong> You can request a copy of your data we hold.</li>
+        <li><strong>Right to Rectification:</strong> You can correct inaccurate or incomplete data.</li>
+        <li><strong>Right to Erasure ("Right to be Forgotten"):</strong> You can request deletion of your data, subject to legal limitations.</li>
+        <li><strong>Right to Restrict Processing:</strong> You can request we stop processing your data.</li>
+        <li><strong>Right to Object:</strong> You can object to processing based on legitimate interests or direct marketing.</li>
+        <li><strong>Right to Data Portability:</strong> You can request your data be transferred to another controller.</li>
+      </ol>
+      <p>
+        To exercise these rights, contact us at
+        <a href="mailto:info@aonefzco.com">info@aonefzco.com</a>.
+      </p>
+
+      <h3>6. Data Security and Retention</h3>
+      <p>
+        We implement appropriate technical and organizational measures to protect your data
+        against unauthorized access, disclosure, alteration, or destruction. We will retain your
+        personal data only for as long as necessary to fulfill the purposes outlined in this
+        policy or as required by UAE law.
+      </p>
+
+      <h3>7. Cross-Border Data Transfers</h3>
+      <p>
+        If we transfer your personal data outside the UAE, we will ensure appropriate safeguards
+        are in place in accordance with the PDPL requirements.
+      </p>
+
+      <h3>8. Contact Us</h3>
+      <p>
+        For any privacy-related questions, please contact us at:
+        <a href="mailto:info@aonefzco.com">info@aonefzco.com</a>.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ---------- Data & Cookie Policy ---------- -->
+<div class="modal" id="modal-cookies" role="dialog" aria-modal="true"
+     aria-labelledby="modal-cookies-title" hidden>
+  <div class="modal__backdrop" data-modal-close></div>
+  <div class="modal__panel">
+    <div class="modal__head">
+      <p class="modal__eyebrow">AONE International General Trade</p>
+      <h2 id="modal-cookies-title">Data Policy &amp; Cookie Policy</h2>
+      <button class="modal__close" type="button" data-modal-close aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="modal__body" tabindex="0">
+      <h3>1. What is a Data Policy?</h3>
+      <p>
+        AONE International General Trade maintains a strict data governance framework to ensure
+        the confidentiality, integrity, and availability of your information.
+      </p>
+
+      <h3>2. Data Collection and Consent</h3>
+      <ul>
+        <li><strong>Minimal Collection:</strong> We collect only the data necessary for the specific purpose it is intended for.</li>
+        <li><strong>Explicit Consent:</strong> We will not process your data without your explicit consent, except where processing is necessary for legitimate interests or legal obligations.</li>
+      </ul>
+
+      <h3>3. Cookies</h3>
+      <p>Our Website uses cookies to enhance your browsing experience.</p>
+      <ul>
+        <li><strong>What are Cookies?</strong> Small text files placed on your device.</li>
+        <li>
+          <strong>How We Use Them:</strong>
+          <ul>
+            <li><strong>Essential Cookies:</strong> Necessary for the website to function.</li>
+            <li><strong>Analytics Cookies:</strong> To understand how visitors interact with the site (e.g., Google Analytics).</li>
+            <li><strong>Functional Cookies:</strong> To remember your preferences.</li>
+          </ul>
+        </li>
+        <li><strong>Managing Cookies:</strong> You can control or delete cookies via your browser settings. However, disabling cookies may affect functionality.</li>
+      </ul>
+
+      <h3>4. Data Breach Notification</h3>
+      <p>
+        In the event of a personal data breach that poses a threat to your rights and freedoms, we
+        will notify the relevant UAE data protection authorities and affected individuals as
+        required by law.
+      </p>
+
+      <h3>5. Contact Us</h3>
+      <p>
+        If you have any questions about our Data or Cookie Policy, please contact us at:
+        <a href="mailto:info@aonefzco.com">info@aonefzco.com</a>.
+      </p>
+
+      <div class="modal__action">
+        <p>You can change the choice you made on this site at any time.</p>
+        <button class="btn btn--gold" type="button" data-consent-reopen>Change cookie choice</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script src="assets/js/main.js"></script>
 </body>

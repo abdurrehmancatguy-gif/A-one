@@ -485,6 +485,100 @@
   }
 
   /* ----------------------------------------------------------------------
+     Policy dialogs
+     Terms, Privacy and Cookie Policy open in place rather than as separate
+     pages, so the single-page site stays single-page. Focus moves into the
+     dialog, is trapped while open, and returns to whatever opened it.
+     ---------------------------------------------------------------------- */
+  var closeAnyModal = function () {};
+
+  function initModals() {
+    var modals = [].slice.call(document.querySelectorAll(".modal"));
+    if (!modals.length) return;
+
+    var FOCUSABLE =
+      'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
+    var openModal = null;
+    var lastFocused = null;
+
+    function focusables(modal) {
+      return [].slice.call(modal.querySelectorAll(FOCUSABLE)).filter(function (el) {
+        return el.offsetParent !== null || el === document.activeElement;
+      });
+    }
+
+    function open(id, trigger) {
+      var modal = document.getElementById(id);
+      if (!modal) return;
+      if (openModal) close();
+
+      lastFocused = trigger || document.activeElement;
+      modal.hidden = false;
+      // Force layout so the fade has a start value; rAF is throttled in
+      // background tabs and would leave the dialog invisible.
+      void modal.offsetHeight;
+      modal.classList.add("is-open");
+      document.body.classList.add("modal-open");
+      openModal = modal;
+
+      var first = modal.querySelector(".modal__body") || focusables(modal)[0];
+      if (first) first.focus({ preventScroll: true });
+    }
+
+    function close() {
+      if (!openModal) return;
+      var modal = openModal;
+      openModal = null;
+      modal.classList.remove("is-open");
+      document.body.classList.remove("modal-open");
+      window.setTimeout(function () {
+        if (!modal.classList.contains("is-open")) modal.hidden = true;
+      }, reduceMotion ? 0 : 450);
+      if (lastFocused && lastFocused.focus) lastFocused.focus({ preventScroll: true });
+      lastFocused = null;
+    }
+
+    closeAnyModal = close;
+
+    document.addEventListener("click", function (e) {
+      var opener = e.target.closest("[data-modal-open]");
+      if (opener) {
+        e.preventDefault();
+        open(opener.getAttribute("data-modal-open"), opener);
+        return;
+      }
+      if (e.target.closest("[data-modal-close]")) close();
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (!openModal) return;
+
+      if (e.key === "Escape") {
+        e.preventDefault();
+        close();
+        return;
+      }
+
+      if (e.key !== "Tab") return;
+
+      // Keep focus inside the dialog.
+      var items = focusables(openModal);
+      if (!items.length) return;
+      var first = items[0];
+      var last = items[items.length - 1];
+      var active = document.activeElement;
+
+      if (e.shiftKey && (active === first || active === openModal.querySelector(".modal__body"))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+  }
+
+  /* ----------------------------------------------------------------------
      Consent
      The site sets no tracking, analytics or advertising cookies. The only
      thing that actually discloses anything about a visitor is the web-font
@@ -537,6 +631,8 @@
 
     document.querySelectorAll("[data-consent-reopen]").forEach(function (el) {
       el.addEventListener("click", function () {
+        // The Cookie Policy dialog carries one of these; get it out of the way.
+        closeAnyModal();
         open();
         var first = banner.querySelector("[data-consent]");
         if (first) first.focus({ preventScroll: true });
@@ -564,7 +660,7 @@
   function boot() {
     [
       initReveal, initScrollChrome, initMobileNav, initScrollSpy,
-      initAccordion, initDrift, initForm, initConsent, initYear
+      initAccordion, initDrift, initForm, initModals, initConsent, initYear
     ].forEach(function (fn) {
       try { fn(); } catch (err) {
         if (window.console) console.error("[a-one] " + fn.name + " failed:", err);
