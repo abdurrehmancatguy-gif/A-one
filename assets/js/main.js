@@ -257,8 +257,8 @@
         return [isNaN(lo) ? dMin : lo, isNaN(hi) ? dMax : hi];
       }
 
-      var sizeRange = pair("data-drift-size", 44, 185);
-      var opRange = pair("data-drift-opacity", 0.055, 0.135);
+      var sizeRange = pair("data-drift-size", 30, 215);
+      var opRange = pair("data-drift-opacity", 0.05, 0.14);
       var count = parseInt(host.getAttribute("data-drift-count"), 10);
       if (isNaN(count)) count = window.innerWidth < 700 ? 5 : 9;
 
@@ -275,21 +275,30 @@
         el.className = "drift__mark";
         el.innerHTML = MARK;
 
-        var size = rand(sizeRange[0], sizeRange[1]);
+        // Sizes are stratified, not simply random: each mark is drawn from its
+        // own band of the range, so the set always spans small to large. A flat
+        // random draw across five marks routinely lands them all in one band
+        // and the size variation disappears.
+        var t = (i + rand(0.12, 0.88)) / count;
+        var depth = Math.pow(t, 1.35);           // bias towards the smaller end
+        var size = sizeRange[0] + (sizeRange[1] - sizeRange[0]) * depth;
         el.style.width = size.toFixed(0) + "px";
-        // Visible enough that the drift reads as motion, faint enough that it
-        // never competes with the text sitting on top of it.
-        el.style.opacity = rand(opRange[0], opRange[1]).toFixed(3);
+
+        // Bigger reads as nearer: slightly more opaque and slightly faster.
+        // Still capped low enough never to compete with the text on top.
+        el.style.opacity =
+          (opRange[0] + (opRange[1] - opRange[0]) * depth).toFixed(3);
+        var near = 0.6 + depth * 0.9;
 
         sys.marks.push({
           el: el,
           size: size,
           x: rand(-size, sys.W),
           y: rand(-size, sys.H),
-          vx: sign() * rand(5, 17),      // px per second
-          vy: sign() * rand(4, 14),
+          vx: sign() * rand(5, 15) * near,   // px per second
+          vy: sign() * rand(4, 12) * near,
           rot: rand(0, 360),
-          vrot: sign() * rand(1.5, 6),   // degrees per second
+          vrot: sign() * rand(1.5, 6),       // degrees per second
           phase: rand(0, Math.PI * 2),
           wobbleSpeed: rand(0.06, 0.22),
           wobble: rand(6, 20)
