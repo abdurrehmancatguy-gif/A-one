@@ -234,9 +234,9 @@
      way a CSS keyframe would. Deliberately slow and faint — this sits
      behind the headline and must not compete with it.
      ---------------------------------------------------------------------- */
-  function initHeroDrift() {
-    var host = document.querySelector("[data-hero-drift]");
-    if (!host) return;
+  function initDrift() {
+    var hosts = [].slice.call(document.querySelectorAll("[data-drift]"));
+    if (!hosts.length) return;
 
     var MARK =
       '<svg viewBox="0 0 292 273" xmlns="http://www.w3.org/2000/svg">' +
@@ -246,37 +246,59 @@
     var rand = function (min, max) { return min + Math.random() * (max - min); };
     var sign = function () { return Math.random() < 0.5 ? -1 : 1; };
 
-    var W = host.clientWidth;
-    var H = host.clientHeight;
-    var marks = [];
-    var count = window.innerWidth < 700 ? 5 : 9;
+    var systems = [];
 
-    for (var i = 0; i < count; i++) {
-      var el = document.createElement("div");
-      el.className = "hero__mark";
-      el.innerHTML = MARK;
+    hosts.forEach(function (host) {
+      // "min,max" attribute, falling back to the hero's defaults
+      function pair(attr, dMin, dMax) {
+        var raw = (host.getAttribute(attr) || "").split(",");
+        var lo = parseFloat(raw[0]);
+        var hi = parseFloat(raw[1]);
+        return [isNaN(lo) ? dMin : lo, isNaN(hi) ? dMax : hi];
+      }
 
-      var size = rand(44, 185);
-      el.style.width = size.toFixed(0) + "px";
-      // Visible enough that the drift reads as motion, faint enough that it
-      // never competes with the headline sitting on top of it.
-      el.style.opacity = rand(0.055, 0.135).toFixed(3);
+      var sizeRange = pair("data-drift-size", 44, 185);
+      var opRange = pair("data-drift-opacity", 0.055, 0.135);
+      var count = parseInt(host.getAttribute("data-drift-count"), 10);
+      if (isNaN(count)) count = window.innerWidth < 700 ? 5 : 9;
 
-      marks.push({
-        el: el,
-        size: size,
-        x: rand(-size, W),
-        y: rand(-size, H),
-        vx: sign() * rand(5, 17),      // px per second
-        vy: sign() * rand(4, 14),
-        rot: rand(0, 360),
-        vrot: sign() * rand(1.5, 6),   // degrees per second
-        phase: rand(0, Math.PI * 2),
-        wobbleSpeed: rand(0.06, 0.22),
-        wobble: rand(6, 20)
-      });
-      host.appendChild(el);
-    }
+      var sys = {
+        host: host,
+        marks: [],
+        W: host.clientWidth,
+        H: host.clientHeight,
+        active: false
+      };
+
+      for (var i = 0; i < count; i++) {
+        var el = document.createElement("div");
+        el.className = "drift__mark";
+        el.innerHTML = MARK;
+
+        var size = rand(sizeRange[0], sizeRange[1]);
+        el.style.width = size.toFixed(0) + "px";
+        // Visible enough that the drift reads as motion, faint enough that it
+        // never competes with the text sitting on top of it.
+        el.style.opacity = rand(opRange[0], opRange[1]).toFixed(3);
+
+        sys.marks.push({
+          el: el,
+          size: size,
+          x: rand(-size, sys.W),
+          y: rand(-size, sys.H),
+          vx: sign() * rand(5, 17),      // px per second
+          vy: sign() * rand(4, 14),
+          rot: rand(0, 360),
+          vrot: sign() * rand(1.5, 6),   // degrees per second
+          phase: rand(0, Math.PI * 2),
+          wobbleSpeed: rand(0.06, 0.22),
+          wobble: rand(6, 20)
+        });
+        host.appendChild(el);
+      }
+
+      systems.push(sys);
+    });
 
     function draw(m) {
       var wx = Math.sin(m.phase) * m.wobble;
@@ -288,10 +310,15 @@
 
     // Reduced motion: place them, never move them.
     if (reduceMotion) {
-      marks.forEach(draw);
+      systems.forEach(function (s) { s.marks.forEach(draw); });
       return;
     }
 
+    function anyActive() {
+      return systems.some(function (s) { return s.active; });
+    }
+
+    // One loop drives every system, so three drift layers cost one rAF.
     var last = 0;
     var raf = null;
 
@@ -300,26 +327,35 @@
       var dt = last ? Math.min((now - last) / 1000, 0.05) : 0;
       last = now;
 
-      for (var i = 0; i < marks.length; i++) {
-        var m = marks[i];
-        m.x += m.vx * dt;
-        m.y += m.vy * dt;
-        m.rot += m.vrot * dt;
-        m.phase += m.wobbleSpeed * dt;
+      var running = false;
 
-        var pad = m.size + m.wobble;
-        if (m.x > W + pad) m.x = -pad;
-        else if (m.x < -pad) m.x = W + pad;
-        if (m.y > H + pad) m.y = -pad;
-        else if (m.y < -pad) m.y = H + pad;
+      for (var s = 0; s < systems.length; s++) {
+        var sys = systems[s];
+        if (!sys.active) continue;
+        running = true;
 
-        draw(m);
+        for (var i = 0; i < sys.marks.length; i++) {
+          var m = sys.marks[i];
+          m.x += m.vx * dt;
+          m.y += m.vy * dt;
+          m.rot += m.vrot * dt;
+          m.phase += m.wobbleSpeed * dt;
+
+          var pad = m.size + m.wobble;
+          if (m.x > sys.W + pad) m.x = -pad;
+          else if (m.x < -pad) m.x = sys.W + pad;
+          if (m.y > sys.H + pad) m.y = -pad;
+          else if (m.y < -pad) m.y = sys.H + pad;
+
+          draw(m);
+        }
       }
-      raf = window.requestAnimationFrame(frame);
+
+      raf = running ? window.requestAnimationFrame(frame) : null;
     }
 
     function start() {
-      if (raf) return;
+      if (raf || !anyActive()) return;
       last = 0;
       raf = window.requestAnimationFrame(frame);
     }
@@ -329,23 +365,35 @@
       raf = null;
     }
 
-    // Only animate while the hero is actually on screen.
+    // Only animate the layers actually on screen.
     if ("IntersectionObserver" in window) {
-      new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) { e.isIntersecting ? start() : stop(); });
-      }, { threshold: 0 }).observe(host);
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          for (var i = 0; i < systems.length; i++) {
+            if (systems[i].host === e.target) {
+              systems[i].active = e.isIntersecting;
+              break;
+            }
+          }
+        });
+        start();
+      }, { threshold: 0 });
+      systems.forEach(function (s) { io.observe(s.host); });
     } else {
+      systems.forEach(function (s) { s.active = true; });
       start();
     }
 
     document.addEventListener("visibilitychange", function () {
       if (document.hidden) stop();
-      else if (host.getBoundingClientRect().bottom > 0) start();
+      else start();
     });
 
     window.addEventListener("resize", function () {
-      W = host.clientWidth;
-      H = host.clientHeight;
+      systems.forEach(function (s) {
+        s.W = s.host.clientWidth;
+        s.H = s.host.clientHeight;
+      });
     }, { passive: true });
   }
 
@@ -507,7 +555,7 @@
   function boot() {
     [
       initReveal, initScrollChrome, initMobileNav, initScrollSpy,
-      initAccordion, initHeroDrift, initForm, initConsent, initYear
+      initAccordion, initDrift, initForm, initConsent, initYear
     ].forEach(function (fn) {
       try { fn(); } catch (err) {
         if (window.console) console.error("[a-one] " + fn.name + " failed:", err);
