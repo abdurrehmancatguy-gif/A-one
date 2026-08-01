@@ -620,29 +620,28 @@ strong { color: var(--ink); font-weight: 600; }
     linear-gradient(160deg, #142032 0%, #0f1a28 46%, #09111b 100%);
 }
 
-/* Slow drifting geometry built from the logo shapes */
-.hero__shape {
+/* Drifting logo marks.
+   The layer is styled here; the marks themselves are created by main.js so
+   each gets its own random size, heading, speed and spin. Positions are
+   written straight to `transform`, so nothing here may set one. */
+.hero__drift {
   position: absolute;
-  opacity: 0.05;
-  will-change: transform;
-}
-.hero__shape--1 {
-  width: min(46vw, 560px);
-  top: -8%;
-  right: -6%;
-  animation: drift 26s var(--ease-soft) infinite alternate;
-}
-.hero__shape--2 {
-  width: min(26vw, 300px);
-  bottom: -12%;
-  left: -4%;
-  opacity: 0.055;
-  animation: drift 32s var(--ease-soft) infinite alternate-reverse;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
 }
 
-@keyframes drift {
-  from { transform: translate3d(0, 0, 0) rotate(0deg); }
-  to   { transform: translate3d(-26px, 34px, 0) rotate(5deg); }
+.hero__mark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+.hero__mark svg {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 /* Faint vertical rules */

@@ -226,27 +226,126 @@
   }
 
   /* ----------------------------------------------------------------------
-     Hero parallax on the drifting shapes
-     ---------------------------------------------------------------------- */
-  function initParallax() {
-    if (reduceMotion) return;
-    var shapes = document.querySelectorAll("[data-parallax]");
-    if (!shapes.length) return;
+     Drifting logo marks in the hero
 
-    var ticking = false;
-    function update() {
-      var y = window.pageYOffset || 0;
-      shapes.forEach(function (el) {
-        var speed = parseFloat(el.getAttribute("data-parallax")) || 0.1;
-        el.style.setProperty("--parallax", (y * speed).toFixed(1) + "px");
-        el.style.translate = "0 " + (y * speed).toFixed(1) + "px";
+     Each mark gets a random size, heading, speed and spin, plus a slow
+     sine wobble so it does not travel in a dead straight line. Marks wrap
+     around the edges, so the motion never resolves into a visible loop the
+     way a CSS keyframe would. Deliberately slow and faint — this sits
+     behind the headline and must not compete with it.
+     ---------------------------------------------------------------------- */
+  function initHeroDrift() {
+    var host = document.querySelector("[data-hero-drift]");
+    if (!host) return;
+
+    var MARK =
+      '<svg viewBox="0 0 292 273" xmlns="http://www.w3.org/2000/svg">' +
+      '<path d="M143 0 L182 55 L85 273 L0 273 Z" fill="#ffffff"/>' +
+      '<path d="M225 140 L292 273 L158 273 Z" fill="#dfb96b"/></svg>';
+
+    var rand = function (min, max) { return min + Math.random() * (max - min); };
+    var sign = function () { return Math.random() < 0.5 ? -1 : 1; };
+
+    var W = host.clientWidth;
+    var H = host.clientHeight;
+    var marks = [];
+    var count = window.innerWidth < 700 ? 5 : 9;
+
+    for (var i = 0; i < count; i++) {
+      var el = document.createElement("div");
+      el.className = "hero__mark";
+      el.innerHTML = MARK;
+
+      var size = rand(44, 185);
+      el.style.width = size.toFixed(0) + "px";
+      // Visible enough that the drift reads as motion, faint enough that it
+      // never competes with the headline sitting on top of it.
+      el.style.opacity = rand(0.055, 0.135).toFixed(3);
+
+      marks.push({
+        el: el,
+        size: size,
+        x: rand(-size, W),
+        y: rand(-size, H),
+        vx: sign() * rand(5, 17),      // px per second
+        vy: sign() * rand(4, 14),
+        rot: rand(0, 360),
+        vrot: sign() * rand(1.5, 6),   // degrees per second
+        phase: rand(0, Math.PI * 2),
+        wobbleSpeed: rand(0.06, 0.22),
+        wobble: rand(6, 20)
       });
-      ticking = false;
+      host.appendChild(el);
     }
-    window.addEventListener("scroll", function () {
-      if (ticking) return;
-      ticking = true;
-      window.requestAnimationFrame(update);
+
+    function draw(m) {
+      var wx = Math.sin(m.phase) * m.wobble;
+      var wy = Math.cos(m.phase * 0.8) * m.wobble;
+      m.el.style.transform =
+        "translate3d(" + (m.x + wx).toFixed(1) + "px," + (m.y + wy).toFixed(1) + "px,0)" +
+        " rotate(" + m.rot.toFixed(2) + "deg)";
+    }
+
+    // Reduced motion: place them, never move them.
+    if (reduceMotion) {
+      marks.forEach(draw);
+      return;
+    }
+
+    var last = 0;
+    var raf = null;
+
+    function frame(now) {
+      // Clamp dt so a backgrounded tab does not teleport everything on return.
+      var dt = last ? Math.min((now - last) / 1000, 0.05) : 0;
+      last = now;
+
+      for (var i = 0; i < marks.length; i++) {
+        var m = marks[i];
+        m.x += m.vx * dt;
+        m.y += m.vy * dt;
+        m.rot += m.vrot * dt;
+        m.phase += m.wobbleSpeed * dt;
+
+        var pad = m.size + m.wobble;
+        if (m.x > W + pad) m.x = -pad;
+        else if (m.x < -pad) m.x = W + pad;
+        if (m.y > H + pad) m.y = -pad;
+        else if (m.y < -pad) m.y = H + pad;
+
+        draw(m);
+      }
+      raf = window.requestAnimationFrame(frame);
+    }
+
+    function start() {
+      if (raf) return;
+      last = 0;
+      raf = window.requestAnimationFrame(frame);
+    }
+    function stop() {
+      if (!raf) return;
+      window.cancelAnimationFrame(raf);
+      raf = null;
+    }
+
+    // Only animate while the hero is actually on screen.
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { e.isIntersecting ? start() : stop(); });
+      }, { threshold: 0 }).observe(host);
+    } else {
+      start();
+    }
+
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) stop();
+      else if (host.getBoundingClientRect().bottom > 0) start();
+    });
+
+    window.addEventListener("resize", function () {
+      W = host.clientWidth;
+      H = host.clientHeight;
     }, { passive: true });
   }
 
@@ -408,7 +507,7 @@
   function boot() {
     [
       initReveal, initScrollChrome, initMobileNav, initScrollSpy,
-      initAccordion, initParallax, initForm, initConsent, initYear
+      initAccordion, initHeroDrift, initForm, initConsent, initYear
     ].forEach(function (fn) {
       try { fn(); } catch (err) {
         if (window.console) console.error("[a-one] " + fn.name + " failed:", err);
