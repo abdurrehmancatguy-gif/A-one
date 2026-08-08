@@ -1273,6 +1273,18 @@ body.consent-open .to-top { opacity: 0; visibility: hidden; }
 .footer__brand .logo { margin-bottom: 1.5rem; }
 .footer__about { max-width: 34ch; line-height: 1.85; }
 
+.footer__email {
+  margin: 1.25rem 0 0;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+}
+.footer__email a {
+  color: var(--gold);
+  transition: color 0.3s var(--ease);
+}
+.footer__email a:hover { color: var(--gold-soft); }
+
 .footer h4 {
   margin-bottom: 1.35rem;
   font-family: var(--font-display);
